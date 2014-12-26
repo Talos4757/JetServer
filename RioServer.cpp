@@ -9,38 +9,36 @@
 
 const int MAX_TARGETS = 3;
 
-static Target* RioServer::GetTargets()
+vector<Target>* RioServer::GetTargets()
 {
-	Target found[MAX_TARGETS];
+	vector<Target> *found;
 
 	for(int i = 0; i < MAX_TARGETS; i++)
 	{
-		found[i] = Deseriallize(QueryJetson());
+		found->push_back(Deseriallize(QueryJetson()));
 	}
 
-	return &found;
+	return found;
 }
 
-static bool RioServer::Init()
+bool RioServer::Init()
 {
-	return this->AttemptConnect();
+	return AttemptConnect();
 }
 
-static bool RioServer::AttemptConnect()
+bool RioServer::AttemptConnect()
 {
 	//bind()
 	return true;
 }
 
-static char RioServer::QueryJetson() //Move to another thread?
+char RioServer::QueryJetson() //Move to another thread?
 {
 	//Recv() goes here
-	return new char;
+	return 'c';
 }
 
-static Target RioServer::Deseriallize(char encoded)
+Target RioServer::Deseriallize(char encoded)
 {
-	return new Target;
+	return *(new Target);
 }
-
-

@@ -19,10 +19,10 @@
 
 using namespace std;
 
-static class RioServer
+class RioServer
 {
 public:
-	static Target* GetTargets();
+	static vector<Target>* GetTargets();
 
 private:
 	static int JetSocket;
