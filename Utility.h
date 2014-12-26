@@ -5,8 +5,8 @@
  *      Author: matan
  */
 
-#ifndef UTILITY_H_
-#define UTILITY_H_
+#ifndef JETSERVER_UTILITY_H_
+#define JETSERVER_UTILITY_H_
 
 #include <iostream>
 #include <stdio.h>
@@ -37,4 +37,4 @@ class Target
 };
 
 
-#endif /* UTILITY_H_ */
+#endif /* JETSERVER_UTILITY_H_ */

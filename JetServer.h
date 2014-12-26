@@ -1,12 +1,12 @@
 /*
- * RioServer.h
+ * JetServer.h
  *
  *  Created on: Dec 26, 2014
  *      Author: Matan Rosenberg
  */
 
-#ifndef RIOSERVER_H_
-#define RIOSERVER_H_
+#ifndef JETSERVER_H_
+#define JETSERVER_H_
 
 #include <iostream>
 #include <stdio.h>
@@ -25,8 +25,8 @@ public:
 	static vector<Target>* GetTargets();
 
 private:
-	static int JetSocket;
-	//other sockets (for potentially other devices) will go here
+	static int JetsonSocket;
+
 
 	static bool Init();
 	static bool AttemptConnect();
@@ -36,4 +36,4 @@ private:
 };
 
 
-#endif /* RIOSERVER_H_ */
+#endif /* JETSERVER_H_ */

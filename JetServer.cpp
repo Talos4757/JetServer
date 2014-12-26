@@ -1,21 +1,21 @@
 /*
- * RioServer.cpp
+ * JetServer.cpp
  *
  *  Created on: Dec 26, 2014
  *      Author: Matan Rosenberg
  */
 
-#include "RioServer.h"
+#include "JetServer.h"
 
 const int MAX_TARGETS = 3;
 
 vector<Target>* RioServer::GetTargets()
 {
-	vector<Target> *found;
+	vector<Target> *found = new vector<Target>(MAX_TARGETS);
 
 	for(int i = 0; i < MAX_TARGETS; i++)
 	{
-		found->push_back(Deseriallize(QueryJetson()));
+		found[i] = Deseriallize(QueryJetson());
 	}
 
 	return found;
