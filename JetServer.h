@@ -28,16 +28,15 @@ using namespace std;
 class JetServer
 {
 public:
-	static vector<Target>* GetTargets();
-
+	static vector<Target*> QueryJetson();
+	
 private:
 	static int JetsonSocket;
 	static int acp_socket;
 
 	static bool Init();
 
-	static char QueryJetson();
-	static Target Deseriallize(char encoded);
+	static Target* Deseriallize(char[] encoded);
 };
 
 

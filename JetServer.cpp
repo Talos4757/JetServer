@@ -7,18 +7,6 @@
 
 #include "JetServer.h"
 
-vector<Target>* JetServer::GetTargets()
-{
-	vector<Target> *found = new vector<Target>(MAX_TARGETS);
-
-	for(int i = 0; i < MAX_TARGETS; i++)
-	{
-		found->push_back(Deseriallize(QueryJetson()));
-	}
-
-	return found;
-}
-
 bool JetServer::Init()
 {
 	JetsonSocket = socket(AF_INET,SOCK_STREAM,TCP_SOCKET);
@@ -51,13 +39,34 @@ bool JetServer::Init()
 }
 
 
-char JetServer::QueryJetson() //Move to another thread?
+vector<Target*> JetServer::QueryJetson()
 {
-	//Recv() goes here
-	return 'c';
+	vector<Target*> targets;
+
+	char buffer[4];
+	char targetbuffer[16];
+
+	recv(acp_socket,buffer,4,0);
+  int UpcomingTargets = *(int*)buffer;
+
+
+	for(int i = 0; i < UpcomingTargets; i++)
+	{
+		recv(acp_socket,targetbuffer,16,0);
+		targets.push_back(Deseriallize(targetbuffer));
+	}
+
+	return targets;
 }
 
-Target JetServer::Deseriallize(char encoded)
+Target* JetServer::Deseriallize(char[] encoded)
 {
-	return *(new Target);
+	Target* target = new Target();
+
+	target->type = *(int*)encoded;
+	target->distance = *(double*)(&encoded[4]);
+	target->h_angle = *(double*)(&encoded[8]);
+	target->v_angle = *(double*)(&encoded[12]);
+
+	return target;
 }
