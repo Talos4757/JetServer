@@ -22,7 +22,7 @@ using namespace std;
 static class RioServer
 {
 public:
-	static vector<Target> GetTargets();
+	static Target* GetTargets();
 
 private:
 	static int JetSocket;
@@ -31,8 +31,8 @@ private:
 	static bool Init();
 	static bool AttemptConnect();
 
-	static vector<char> QueryJetson();
-	static Target Deseriallize();
+	static char QueryJetson();
+	static Target Deseriallize(char encoded);
 };
 
 

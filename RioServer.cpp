@@ -2,33 +2,43 @@
  * RioServer.cpp
  *
  *  Created on: Dec 26, 2014
- *      Author: matan
+ *      Author: Matan Rosenberg
  */
 
 #include "RioServer.h"
 
+const int MAX_TARGETS = 3;
 
-static vector<Target> RioServer::GetTargets()
+static Target* RioServer::GetTargets()
 {
-	return new vector<Target>;
+	Target found[MAX_TARGETS];
+
+	for(int i = 0; i < MAX_TARGETS; i++)
+	{
+		found[i] = Deseriallize(QueryJetson());
+	}
+
+	return &found;
 }
 
 static bool RioServer::Init()
 {
-	return true;
+	return this->AttemptConnect();
 }
 
 static bool RioServer::AttemptConnect()
 {
+	//bind()
 	return true;
 }
 
-static vector<char> RioServer::QueryJetson()
+static char RioServer::QueryJetson() //Move to another thread?
 {
-	return new vector<char>;
+	//Recv() goes here
+	return new char;
 }
 
-static Target RioServer::Deseriallize()
+static Target RioServer::Deseriallize(char encoded)
 {
 	return new Target;
 }
