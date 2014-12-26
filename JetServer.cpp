@@ -7,7 +7,7 @@
 
 #include "JetServer.h"
 
-vector<Target>* RioServer::GetTargets()
+vector<Target>* JetServer::GetTargets()
 {
 	vector<Target> *found = new vector<Target>(MAX_TARGETS);
 
@@ -19,7 +19,7 @@ vector<Target>* RioServer::GetTargets()
 	return found;
 }
 
-bool RioServer::Init()
+bool JetServer::Init()
 {
 	JetsonSocket = socket(AF_INET,SOCK_STREAM,TCP_SOCKET);
 	if(JetsonSocket < 0)
@@ -29,7 +29,7 @@ bool RioServer::Init()
 
 	struct sockaddr_in sa;
 	sa.sin_family = AF_INET;
-	sa.sin_port = htons(13);
+	sa.sin_port = htons(7887);
 
 	if(bind(JetsonSocket,(struct sockaddr *)&sa, sizeof sa) != 0)
 	{
@@ -37,16 +37,27 @@ bool RioServer::Init()
 		return false;
 	}
 
+	if(listen(JetsonSocket,6) < 0)
+	{
+			return false;
+	}
+
+	struct sockaddr sar;
+	socklen_t st;
+
+	acp_socket = accept(js,&sar,&st);
+
 	return true;
 }
 
-char RioServer::QueryJetson() //Move to another thread?
+
+char JetServer::QueryJetson() //Move to another thread?
 {
 	//Recv() goes here
 	return 'c';
 }
 
-Target RioServer::Deseriallize(char encoded)
+Target JetServer::Deseriallize(char encoded)
 {
 	return *(new Target);
 }

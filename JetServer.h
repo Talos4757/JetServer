@@ -25,14 +25,14 @@ const int MAX_TARGETS = 3;
 
 using namespace std;
 
-class RioServer
+class JetServer
 {
 public:
 	static vector<Target>* GetTargets();
 
 private:
 	static int JetsonSocket;
-
+	static int acp_socket;
 
 	static bool Init();
 
