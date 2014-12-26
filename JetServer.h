@@ -9,8 +9,7 @@
 #define JETSERVER_H_
 
 #define TCP_SOCKET 0
-
-const int MAX_TARGETS = 3;
+#define JPORT 7887
 
 #include <iostream>
 #include <stdio.h>
@@ -29,7 +28,7 @@ class JetServer
 {
 public:
 	static vector<Target*> QueryJetson();
-	
+
 private:
 	static int JetsonSocket;
 	static int acp_socket;

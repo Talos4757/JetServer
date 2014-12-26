@@ -17,9 +17,10 @@ bool JetServer::Init()
 
 	struct sockaddr_in sa;
 	sa.sin_family = AF_INET;
-	sa.sin_port = htons(7887);
+	sa.sin_port = htons(JPORT);
+	sa.sin_addr.s_addr = INADDR_ANY;
 
-	if(bind(JetsonSocket,(struct sockaddr *)&sa, sizeof sa) != 0)
+	if(bind(JetsonSocket,(struct sockaddr *)&sa, sizeof(sa)) != 0)
 	{
 		//failure if not 0
 		return false;
