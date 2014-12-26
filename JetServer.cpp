@@ -7,15 +7,13 @@
 
 #include "JetServer.h"
 
-const int MAX_TARGETS = 3;
-
 vector<Target>* RioServer::GetTargets()
 {
 	vector<Target> *found = new vector<Target>(MAX_TARGETS);
 
 	for(int i = 0; i < MAX_TARGETS; i++)
 	{
-		found[i] = Deseriallize(QueryJetson());
+		found->push_back(Deseriallize(QueryJetson()));
 	}
 
 	return found;
@@ -23,12 +21,22 @@ vector<Target>* RioServer::GetTargets()
 
 bool RioServer::Init()
 {
-	return AttemptConnect();
-}
+	JetsonSocket = socket(AF_INET,SOCK_STREAM,TCP_SOCKET);
+	if(JetsonSocket < 0)
+	{
+		return false;
+	}
 
-bool RioServer::AttemptConnect()
-{
-	//bind()
+	struct sockaddr_in sa;
+	sa.sin_family = AF_INET;
+	sa.sin_port = htons(13);
+
+	if(bind(JetsonSocket,(struct sockaddr *)&sa, sizeof sa) != 0)
+	{
+		//failure if not 0
+		return false;
+	}
+
 	return true;
 }
 

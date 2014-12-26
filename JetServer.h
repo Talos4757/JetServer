@@ -8,12 +8,18 @@
 #ifndef JETSERVER_H_
 #define JETSERVER_H_
 
+#define TCP_SOCKET 0
+
+const int MAX_TARGETS = 3;
+
 #include <iostream>
 #include <stdio.h>
 #include <vector>
 
 #include <sys/socket.h>
 #include <sys/types.h>
+#include <netinet/in.h>
+#include <unistd.h>
 
 #include "Utility.h"
 
@@ -29,7 +35,6 @@ private:
 
 
 	static bool Init();
-	static bool AttemptConnect();
 
 	static char QueryJetson();
 	static Target Deseriallize(char encoded);
