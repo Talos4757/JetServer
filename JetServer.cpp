@@ -54,13 +54,13 @@ vector<Target*> JetServer::QueryJetson()
 	for(int i = 0; i < UpcomingTargets; i++)
 	{
 		recv(acp_socket,targetbuffer,16,0);
-		targets.push_back(Deseriallize(targetbuffer));
+		targets.push_back(Deserialize(targetbuffer));
 	}
 
 	return targets;
 }
 
-Target* JetServer::Deseriallize(char[] encoded)
+Target* JetServer::Deserialize(char[] encoded)
 {
 	Target* target = new Target();
 
