@@ -35,7 +35,7 @@ private:
 
 	static bool Init();
 
-	static Target* Deserialize(char[] encoded);
+	static Target* Deserialize(char encoded[]);
 };
 
 

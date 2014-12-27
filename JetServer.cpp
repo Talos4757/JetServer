@@ -60,7 +60,7 @@ vector<Target*> JetServer::QueryJetson()
 	return targets;
 }
 
-Target* JetServer::Deserialize(char[] encoded)
+Target* JetServer::Deserialize(char encoded[])
 {
 	Target* target = new Target();
 
