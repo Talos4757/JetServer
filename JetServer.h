@@ -9,7 +9,7 @@
 #define JETSERVER_H_
 
 #define TCP_SOCKET 0
-#define JPORT 7887
+#define JPORT 4242
 
 #include <iostream>
 #include <stdio.h>
