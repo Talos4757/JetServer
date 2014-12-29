@@ -26,6 +26,7 @@ enum TargetType
         HotGoal
 };
 
+#define TARGETSIZE (sizeof(int) + 3*sizeof(double))
 class Target
 {
   //ALL numbers should be relative to the driving pivot!

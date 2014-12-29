@@ -6,7 +6,7 @@
  */
 
 #include "JetServer.h"
-#define ARRAY_SIZE(array) (sizeof((array))/sizeof((array[0])))
+#define ARRAY_SIZE(array) (sizeof(array)/sizeof(array[0])) //please note that this will not work on dynamically allocated arrays
 
 bool JetServer::Init()
 {
@@ -46,7 +46,7 @@ vector<Target*> JetServer::QueryJetson()
 	vector<Target*> targets;
 
 	char buffer[sizeof(int)];
-	char targetbuffer[sizeof(int)+3*sizeof(double)];
+	char targetbuffer[TARGETSIZE];
 
 	recv(acp_socket,buffer,4,0);
   int UpcomingTargets = *(int*)buffer;
@@ -54,7 +54,7 @@ vector<Target*> JetServer::QueryJetson()
 
 	for(int i = 0; i < UpcomingTargets; i++)
 	{
-		recv(acp_socket,targetbuffer,sizeof(int)+3*sizeof(double),0);
+		recv(acp_socket,targetbuffer,TARGETSIZE,0);
 		targets.push_back(Deserialize(targetbuffer));
 	}
 
@@ -63,7 +63,7 @@ vector<Target*> JetServer::QueryJetson()
 
 Target* JetServer::Deserialize(char encoded[])
 {
-	if(ARRAY_SIZE(encoded) == sizeof(int)+3*sizeof(double))
+	if(ARRAY_SIZE(encoded) == TARGETSIZE)
 	{
 		Target* target = new Target();
 
