@@ -6,6 +6,7 @@
  */
 
 #include "JetServer.h"
+#define ARRAY_SIZE(array) (sizeof((array))/sizeof((array[0])))
 
 bool JetServer::Init()
 {
@@ -44,8 +45,8 @@ vector<Target*> JetServer::QueryJetson()
 {
 	vector<Target*> targets;
 
-	char buffer[4];
-	char targetbuffer[16];
+	char buffer[sizeof(int)];
+	char targetbuffer[sizeof(int)+3*sizeof(double)];
 
 	recv(acp_socket,buffer,4,0);
   int UpcomingTargets = *(int*)buffer;
@@ -53,7 +54,7 @@ vector<Target*> JetServer::QueryJetson()
 
 	for(int i = 0; i < UpcomingTargets; i++)
 	{
-		recv(acp_socket,targetbuffer,16,0);
+		recv(acp_socket,targetbuffer,sizeof(int)+3*sizeof(double),0);
 		targets.push_back(Deserialize(targetbuffer));
 	}
 
@@ -62,12 +63,19 @@ vector<Target*> JetServer::QueryJetson()
 
 Target* JetServer::Deserialize(char encoded[])
 {
-	Target* target = new Target();
+	if(ARRAY_SIZE(encoded) == sizeof(int)+3*sizeof(double))
+	{
+		Target* target = new Target();
 
-	target->type = *(int*)encoded;
-	target->distance = *(double*)(&encoded[4]);
-	target->h_angle = *(double*)(&encoded[8]);
-	target->v_angle = *(double*)(&encoded[12]);
+		target->type = *(int*)encoded;
+		target->distance = *(double*)(&encoded[sizeof(int)]);
+		target->h_angle = *(double*)(&encoded[sizeof(double + sizeof(int)]);
+		target->v_angle = *(double*)(&encoded[2*sizeof(double)+ sizeof(int)]);
 
-	return target;
+		return target;
+	}
+	else
+	{
+		return NULL;
+	}
 }
