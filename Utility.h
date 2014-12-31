@@ -31,7 +31,7 @@ class Target
 {
   //ALL numbers should be relative to the driving pivot!
   public:
-    TargetType type = NA;
+    TargetType type;
     double distance; 
     double h_angle;
     double v_angle;

@@ -6,13 +6,27 @@
  */
 
 #include "JetServer.h"
+#include "SmartDashboard/SmartDashboard.h"
+#include "WPILib.h"
+
 #define ARRAY_SIZE(array) (sizeof(array)/sizeof(array[0])) //please note that this will not work on dynamically allocated arrays
+
+volatile bool JetServer::IsStarted = false;
+volatile bool JetServer::Initing = false;
+int JetServer::JetsonSocket = 0;
+int JetServer::acp_socket = 0;
 
 bool JetServer::Init()
 {
+	Initing = true;
+	if(IsStarted){
+		return true;
+		Initing = false;
+	}
 	JetsonSocket = socket(AF_INET,SOCK_STREAM,TCP_SOCKET);
 	if(JetsonSocket < 0)
 	{
+		Initing = false;
 		return false;
 	}
 
@@ -24,19 +38,24 @@ bool JetServer::Init()
 	if(bind(JetsonSocket,(struct sockaddr *)&sa, sizeof(sa)) != 0)
 	{
 		//failure if not 0
+		Initing = false;
 		return false;
 	}
 
 	if(listen(JetsonSocket,6) < 0)
 	{
-			return false;
+		Initing = false;
+		return false;
 	}
 
 	struct sockaddr sar;
-	socklen_t st;
+	/*socklen_t*/ int st;
+	SmartDashboard::PutString("status","connecting");
+	acp_socket = accept(JetsonSocket,&sar,&st);
+	SmartDashboard::PutString("status","connected");
 
-	acp_socket = accept(js,&sar,&st);
-
+	IsStarted=true;
+	Initing = false;
 	return true;
 }
 
@@ -44,7 +63,8 @@ bool JetServer::Init()
 vector<Target*> JetServer::QueryJetson()
 {
 	vector<Target*> targets;
-
+	if(!IsStarted)
+		return targets;
 	char buffer[sizeof(int)];
 	char targetbuffer[TARGETSIZE];
 
@@ -54,7 +74,11 @@ vector<Target*> JetServer::QueryJetson()
 
 	for(int i = 0; i < UpcomingTargets; i++)
 	{
-		recv(acp_socket,targetbuffer,TARGETSIZE,0);
+		if(recv(acp_socket,targetbuffer,TARGETSIZE,0) == -1){
+			IsStarted = false;
+			SmartDashboard::PutString("status","dissconnected");
+			return targets;
+		}
 		targets.push_back(Deserialize(targetbuffer));
 	}
 
@@ -67,9 +91,9 @@ Target* JetServer::Deserialize(char encoded[])
 	{
 		Target* target = new Target();
 
-		target->type = *(int*)encoded;
+		target->type = *(TargetType*)encoded;
 		target->distance = *(double*)(&encoded[sizeof(int)]);
-		target->h_angle = *(double*)(&encoded[sizeof(double + sizeof(int)]);
+		target->h_angle = *(double*)(&encoded[sizeof(double) + sizeof(int)]);
 		target->v_angle = *(double*)(&encoded[2*sizeof(double)+ sizeof(int)]);
 
 		return target;

@@ -11,14 +11,13 @@
 #define TCP_SOCKET 0
 #define JPORT 4242
 
+#include "vxWorks.h"
+#include "sockLib.h"
+#include "inetLib.h"
+
 #include <iostream>
 #include <stdio.h>
 #include <vector>
-
-#include <sys/socket.h>
-#include <sys/types.h>
-#include <netinet/in.h>
-#include <unistd.h>
 
 #include "Utility.h"
 
@@ -28,12 +27,12 @@ class JetServer
 {
 public:
 	static vector<Target*> QueryJetson();
-
+	static bool Init();
+	static volatile bool Initing;
+	static volatile bool IsStarted;
 private:
 	static int JetsonSocket;
 	static int acp_socket;
-
-	static bool Init();
 
 	static Target* Deserialize(char encoded[]);
 };
