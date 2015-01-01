@@ -1,10 +1,3 @@
-/*
- * JetServer.h
- *
- *  Created on: Dec 26, 2014
- *      Author: Matan Rosenberg
- */
-
 #ifndef JETSERVER_H_
 #define JETSERVER_H_
 
@@ -14,6 +7,9 @@
 #include "vxWorks.h"
 #include "sockLib.h"
 #include "inetLib.h"
+
+#include "SmartDashboard/SmartDashboard.h"
+#include "WPILib.h"
 
 #include <iostream>
 #include <stdio.h>
@@ -28,8 +24,9 @@ class JetServer
 public:
 	static vector<Target*> QueryJetson();
 	static bool Init();
+	
 	static volatile bool Initing;
-	static volatile bool IsStarted;
+	static volatile bool IsConnected;
 private:
 	static int JetsonSocket;
 	static int acp_socket;

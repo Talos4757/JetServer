@@ -1,17 +1,8 @@
-/*
- * JetServer.cpp
- *
- *  Created on: Dec 26, 2014
- *      Author: Matan Rosenberg
- */
-
 #include "JetServer.h"
-#include "SmartDashboard/SmartDashboard.h"
-#include "WPILib.h"
 
 #define ARRAY_SIZE(array) (sizeof(array)/sizeof(array[0])) //please note that this will not work on dynamically allocated arrays
 
-volatile bool JetServer::IsStarted = false;
+volatile bool JetServer::IsConnected = false;
 volatile bool JetServer::Initing = false;
 int JetServer::JetsonSocket = 0;
 int JetServer::acp_socket = 0;
@@ -19,10 +10,12 @@ int JetServer::acp_socket = 0;
 bool JetServer::Init()
 {
 	Initing = true;
-	if(IsStarted){
-		return true;
+	if(IsConnected)
+	{
 		Initing = false;
+		return true;		
 	}
+	
 	JetsonSocket = socket(AF_INET,SOCK_STREAM,TCP_SOCKET);
 	if(JetsonSocket < 0)
 	{
@@ -50,9 +43,9 @@ bool JetServer::Init()
 
 	struct sockaddr sar;
 	/*socklen_t*/ int st;
-	SmartDashboard::PutString("status","connecting");
+	SmartDashboard::PutString("JetServer Connection Status","Connecting");
 	acp_socket = accept(JetsonSocket,&sar,&st);
-	SmartDashboard::PutString("status","connected");
+	SmartDashboard::PutString("JetServer Connection Status","Connected");
 
 	IsStarted=true;
 	Initing = false;
@@ -64,19 +57,22 @@ vector<Target*> JetServer::QueryJetson()
 {
 	vector<Target*> targets;
 	if(!IsStarted)
+	{
 		return targets;
+	}
+	
 	char buffer[sizeof(int)];
 	char targetbuffer[TARGETSIZE];
 
 	recv(acp_socket,buffer,4,0);
-  int UpcomingTargets = *(int*)buffer;
+    int UpcomingTargets = *(int*)buffer;
 
 
 	for(int i = 0; i < UpcomingTargets; i++)
 	{
 		if(recv(acp_socket,targetbuffer,TARGETSIZE,0) == -1){
 			IsStarted = false;
-			SmartDashboard::PutString("status","dissconnected");
+			SmartDashboard::PutString("JetServer Connection Status","Disconnected");
 			return targets;
 		}
 		targets.push_back(Deserialize(targetbuffer));

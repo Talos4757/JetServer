@@ -1,10 +1,3 @@
-/*
- * Utility.h
- *
- *  Created on: Dec 26, 2014
- *      Author: matan
- */
-
 #ifndef JETSERVER_UTILITY_H_
 #define JETSERVER_UTILITY_H_
 
@@ -25,6 +18,12 @@ enum TargetType
         Truss,
         HotGoal
 };
+
+void DeleteTargets(vector<Target*> targets)
+{
+	for(int i =0;i<targets.size();i++)
+	delete targets[i];
+}
 
 #define TARGETSIZE (sizeof(int) + 3*sizeof(double))
 class Target
