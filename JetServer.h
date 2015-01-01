@@ -8,12 +8,13 @@
 #include "sockLib.h"
 #include "inetLib.h"
 
-#include "SmartDashboard/SmartDashboard.h"
-#include "WPILib.h"
-
 #include <iostream>
 #include <stdio.h>
 #include <vector>
+#include <pthread.h>
+
+#include "SmartDashboard/SmartDashboard.h"
+#include "WPILib.h"
 
 #include "Utility.h"
 
@@ -23,14 +24,21 @@ class JetServer
 {
 public:
 	static vector<Target*> QueryJetson();
-	static bool Init();
-	
-	static volatile bool Initing;
+	static void Init();
+
 	static volatile bool IsConnected;
+
 private:
 	static int JetsonSocket;
 	static int acp_socket;
 
+	static volatile bool Initing;
+	static volatile bool initErrorFlag;
+	
+	static pthread_t InitThread;
+
+
+	static void* DoStart(void* args);
 	static Target* Deserialize(char encoded[]);
 };
 
