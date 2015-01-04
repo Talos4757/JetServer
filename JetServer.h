@@ -4,9 +4,19 @@
 #define TCP_SOCKET 0
 #define JPORT 4242
 
+/*
+ * cRio socket includes (VxWorks)
 #include "vxWorks.h"
 #include "sockLib.h"
 #include "inetLib.h"
+*/
+
+
+//RoboRio includes (Linux RT)
+#include <sys/socket.h>
+#include <sys/types.h>
+#include <netinet/in.h>
+#include <unistd.h>
 
 #include <iostream>
 #include <stdio.h>

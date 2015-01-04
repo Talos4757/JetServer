@@ -19,12 +19,6 @@ enum TargetType
         HotGoal
 };
 
-void DeleteTargets(vector<Target*> targets)
-{
-	for(int i =0;i<targets.size();i++)
-	delete targets[i];
-}
-
 #define TARGETSIZE (sizeof(int) + 3*sizeof(double))
 class Target
 {
@@ -36,5 +30,12 @@ class Target
     double v_angle;
 };
 
+void DeleteTargets(vector<Target*> targets)
+{
+	for(int i =0;i<targets.size();i++)
+	{
+		delete targets[i];
+	}
+}
 
 #endif /* JETSERVER_UTILITY_H_ */

@@ -6,9 +6,13 @@
 //Static members declaration
 volatile bool JetServer::IsConnected = false;
 volatile bool JetServer::Initing = false;
+volatile bool JetServer::initErrorFlag = false;
+pthread_t  JetServer::InitThread = NULL;
+
 int JetServer::JetsonSocket = 0;
 int JetServer::acp_socket = 0;
-pthread_t InitThread = NULL;
+
+
 
 void *JetServer::DoStart(void *args)
 {
@@ -48,7 +52,7 @@ void *JetServer::DoStart(void *args)
                 else
                 {
                     struct sockaddr sar;
-                    /*socklen_t*/ int st;
+                    socklen_t st;
 
                     SmartDashboard::PutString("JetServer Connection Status", "Connecting...");
 
@@ -71,7 +75,7 @@ void JetServer::Init()
 {
     if (!Initing && !initErrorFlag)
     {
-        pthead_create(&InitThread, NULL, DoStart , NULL);
+    	pthread_create(&InitThread, NULL, DoStart , NULL);
     }
     else
     {
